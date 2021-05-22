@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Image, Vibration } from "react-native";
 import { BarCodeScannedCallback, BarCodeScanner } from "expo-barcode-scanner";
 import useToast from "../hooks/useToast";
-import useInvoices from "../hooks/useInvoices";
+import useInvoices, {
+  invoiceListSelector,
+  totalInvoicesSelector,
+} from "../hooks/useInvoices";
 import { useBlockForSeconds } from "../hooks/useBlockForSeconds";
 import { isValidInvoiceUrl } from "../utils/invoice";
 import Counter from "../components/ui/Counter";
@@ -13,7 +16,10 @@ interface ScannerScreenProps {}
 const ScannerScreen: React.FC<ScannerScreenProps> = () => {
   const [hasPermission, setHasPermission] = useState(false);
   const [isScanningEnabled, disableScanner] = useBlockForSeconds(3);
-  const { invoices, addInvoice } = useInvoices();
+
+  const { addInvoice, clearInvoices } = useInvoices();
+  const invoicesCount = useInvoices(totalInvoicesSelector);
+  const invoices = useInvoices(invoiceListSelector);
 
   const { showToast } = useToast();
 
@@ -69,7 +75,11 @@ const ScannerScreen: React.FC<ScannerScreenProps> = () => {
         source={require("../../assets/target.png")}
       />
 
-      <Counter style={styles.invoiceCounter} value={invoices.length} />
+      <Counter
+        onPress={clearInvoices}
+        style={styles.invoiceCounter}
+        value={invoicesCount}
+      />
     </View>
   );
 };

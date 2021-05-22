@@ -1,24 +1,56 @@
 import create from "zustand";
+import { InvoiceData } from "../types/invoice";
+import { fetchInvoiceData, getInvoiceQueryParams } from "../utils/invoice";
 
-export type Invoice = { url: string };
+export type Invoice = { iic: string; url: string; invoiceData?: InvoiceData };
 
 interface State {
-  invoices: Invoice[];
+  isFetching: boolean;
+  invoices: { [iic: string]: Invoice };
   addInvoice: (invoiceUrl: string) => void;
   clearInvoices: () => void;
 }
 
-const useInvoices = create<State>((set) => ({
-  invoices: [],
+export const totalInvoicesSelector = (state: State) =>
+  Object.keys(state.invoices).length;
 
-  addInvoice(invoiceUrl) {
-    const invoice = { url: invoiceUrl };
+export const invoiceListSelector = (state: State) =>
+  Object.values(state.invoices);
+
+const useInvoices = create<State>((set) => ({
+  isFetching: false,
+  invoices: {},
+
+  async addInvoice(invoiceUrl) {
+    const { iic } = getInvoiceQueryParams(invoiceUrl);
+    const invoice: Invoice = { url: invoiceUrl, iic };
     set((state) => ({
-      invoices: [...state.invoices, invoice],
+      isFetching: true,
+      invoices: {
+        ...state.invoices,
+        [iic]: invoice,
+      },
     }));
+
+    try {
+      const invoiceData = await fetchInvoiceData(invoiceUrl);
+      invoice.invoiceData = invoiceData;
+      set((state) => ({
+        isFetching: false,
+        invoices: {
+          ...state.invoices,
+          [iic]: invoice,
+        },
+      }));
+    } catch (e) {
+      set((state) => ({
+        ...state,
+        isFetching: false,
+      }));
+    }
   },
   clearInvoices() {
-    set({ invoices: [] });
+    set({ invoices: {}, isFetching: false });
   },
 }));
 

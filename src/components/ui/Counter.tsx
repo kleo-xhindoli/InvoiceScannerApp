@@ -6,6 +6,7 @@ import {
   StyleProp,
   ViewStyle,
   Animated,
+  TouchableOpacity,
 } from "react-native";
 import Colors from "../../constants/theme/Colors";
 import FontSizes from "../../constants/theme/FontSizes";
@@ -15,9 +16,10 @@ import Radii from "../../constants/theme/Radii";
 interface CounterProps {
   value: number;
   style?: StyleProp<ViewStyle>;
+  onPress?: () => void;
 }
 
-const Counter: React.FC<CounterProps> = ({ value, style }) => {
+const Counter: React.FC<CounterProps> = ({ value, style, onPress }) => {
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
@@ -50,9 +52,9 @@ const Counter: React.FC<CounterProps> = ({ value, style }) => {
           },
         ]}
       />
-      <View style={styles.counterContainer}>
+      <TouchableOpacity onPress={onPress} style={styles.counterContainer}>
         <Text style={styles.counterText}>{value}</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
