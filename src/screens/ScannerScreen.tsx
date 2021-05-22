@@ -10,14 +10,16 @@ import { useBlockForSeconds } from "../hooks/useBlockForSeconds";
 import { isValidInvoiceUrl } from "../utils/invoice";
 import Counter from "../components/ui/Counter";
 import * as Haptics from "expo-haptics";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "../types/stack";
 
-interface ScannerScreenProps {}
+type ScannerScreenProps = StackScreenProps<RootStackParamList, "Scanner">;
 
-const ScannerScreen: React.FC<ScannerScreenProps> = () => {
+const ScannerScreen: React.FC<ScannerScreenProps> = ({ navigation }) => {
   const [hasPermission, setHasPermission] = useState(false);
   const [isScanningEnabled, disableScanner] = useBlockForSeconds(3);
 
-  const { addInvoice, clearInvoices } = useInvoices();
+  const { addInvoice } = useInvoices();
   const invoicesCount = useInvoices(totalInvoicesSelector);
   const invoices = useInvoices(invoiceListSelector);
 
@@ -76,7 +78,7 @@ const ScannerScreen: React.FC<ScannerScreenProps> = () => {
       />
 
       <Counter
-        onPress={clearInvoices}
+        onPress={() => navigation.navigate("Invoices")}
         style={styles.invoiceCounter}
         value={invoicesCount}
       />

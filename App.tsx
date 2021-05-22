@@ -1,11 +1,11 @@
 import React from "react";
 import { ToastProvider } from "./src/components/providers/Toast";
-import ScannerScreen from "./src/screens/ScannerScreen";
+import RootNavigator from "./src/navigators/RootNavigator";
 
 export default function App() {
   return (
     <ToastProvider>
-      <ScannerScreen />
+      <RootNavigator />
     </ToastProvider>
   );
 }
