@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button, Image } from "react-native";
+import { Text, View, StyleSheet, Image, Vibration } from "react-native";
 import { BarCodeScannedCallback, BarCodeScanner } from "expo-barcode-scanner";
 import useToast from "../hooks/useToast";
 import useInvoices from "../hooks/useInvoices";
-import Colors from "../constants/theme/Colors";
-import FontSizes from "../constants/theme/FontSizes";
 import { useBlockForSeconds } from "../hooks/useBlockForSeconds";
 import { isValidInvoiceUrl } from "../utils/invoice";
-import Spacing from "../constants/theme/Spacing";
-import Radii from "../constants/theme/Radii";
-import FontWeights from "../constants/theme/FontWeights";
+import Counter from "../components/ui/Counter";
+import * as Haptics from "expo-haptics";
 
 interface ScannerScreenProps {}
 
@@ -46,7 +43,7 @@ const ScannerScreen: React.FC<ScannerScreenProps> = () => {
 
     if (!exists) {
       addInvoice(data);
-      alert(`Bar code with type ${type} and data ${data} has been scanned!`);
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } else {
       showToast({ text: "Already Scanned", duration: 1000 });
     }
@@ -72,11 +69,7 @@ const ScannerScreen: React.FC<ScannerScreenProps> = () => {
         source={require("../../assets/target.png")}
       />
 
-      {invoices.length > 0 && (
-        <View style={styles.invoiceCounter}>
-          <Text style={styles.invoiceCounterText}>{invoices.length}</Text>
-        </View>
-      )}
+      <Counter style={styles.invoiceCounter} value={invoices.length} />
     </View>
   );
 };
@@ -92,18 +85,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 30,
     right: 30,
-    backgroundColor: Colors.brand[500],
-    borderRadius: Radii.full,
-    width: 50,
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  invoiceCounterText: {
-    color: Colors.white,
-    fontSize: FontSizes.lg.size,
-    fontWeight: FontWeights.bold,
-    textAlign: "center",
   },
 });
 
