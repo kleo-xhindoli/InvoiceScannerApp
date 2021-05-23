@@ -15,8 +15,8 @@ import FontSizes from "../../constants/theme/FontSizes";
 
 interface FullButtonProps extends TouchableOpacityProps {
   bgColor?: string;
-  text?: string;
-  textColor?: string;
+  label?: string;
+  labelColor?: string;
   icon?: React.ReactNode;
   children?: React.ReactNode;
 }
@@ -24,17 +24,17 @@ interface FullButtonProps extends TouchableOpacityProps {
 export default function FullButton({
   icon,
   bgColor = Colors.brand[600],
-  text,
-  textColor = Colors.white,
+  label,
+  labelColor = Colors.white,
   style,
   children,
   ...rest
 }: FullButtonProps) {
-  const styles = makeStyles(bgColor, textColor);
+  const styles = makeStyles(bgColor, labelColor);
   return (
     <TouchableOpacity style={[styles.button, style]} {...rest}>
       {icon}
-      {text ? <Text style={styles.text}>{text}</Text> : children}
+      {label ? <Text style={styles.text}>{label}</Text> : children}
     </TouchableOpacity>
   );
 }

@@ -7,14 +7,17 @@ import {
   StyleSheet,
   ActivityIndicator,
   FlatList,
-  SafeAreaView,
   TouchableOpacity,
   Alert,
   Platform,
 } from "react-native";
+import KeyboardSpacer from "react-native-keyboard-spacer";
+
 import ActionSheet from "../components/ui/ActionSheet";
 import ActionSheetItem from "../components/ui/ActionSheetItem";
 import FullButton from "../components/ui/FullButton";
+import TextButton from "../components/ui/TextButton";
+import TextInput from "../components/ui/TextInput";
 import Colors from "../constants/theme/Colors";
 import FontSizes from "../constants/theme/FontSizes";
 import FontWeights from "../constants/theme/FontWeights";
@@ -35,9 +38,15 @@ type InvoicesScreenProps = StackScreenProps<RootStackParamList, "Invoices">;
 const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
   const isLoading = useInvoices((state) => state.isFetching);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isEmailOpen,
+    onOpen: openEmail,
+    onClose: closeEmail,
+  } = useDisclosure();
   const { showToast } = useToast();
 
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [email, setEmail] = useState("");
   const invoices = useInvoices(invoiceListSelector);
   const totalAmount = useInvoices(totalInvoiceAmountSelector);
   const removeInvoice = useInvoices((state) => state.removeInvoice);
@@ -74,27 +83,12 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
   };
 
   const exportCSV = () => {
-    // TODO: Refactor this. Prompt is not available on Android.
-    Alert.prompt(
-      "Export Invoices",
-      `Enter the email address you want to send the exported file to.`,
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Send",
-          onPress: (text) => {
-            if (text && isValidEmail(text)) {
-              showToast({ text: `Email sent to ${text}`, duration: 2000 });
-            } else {
-              showToast({ text: "Invalid email", duration: 2000 });
-            }
-          },
-        },
-      ]
-    );
+    if (email && isValidEmail(email)) {
+      showToast({ text: `Email sent to ${email}`, duration: 2000 });
+    } else {
+      showToast({ text: "Invalid email", duration: 2000 });
+    }
+    closeEmail();
   };
 
   const renderListItem = ({ item }: { item: Invoice }) => {
@@ -140,7 +134,7 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
               keyExtractor={(item) => item.iic}
             />
             {/* Spacer so no items show underneath the Total frame */}
-            <View style={{height: 70}} /> 
+            <View style={{ height: 70 }} />
 
             <View style={styles.exportButtonContainer}>
               <FullButton
@@ -153,8 +147,8 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
                     style={{ marginRight: Spacing[2] }}
                   />
                 }
-                text="Export CSV"
-                onPress={exportCSV}
+                label="Export CSV"
+                onPress={openEmail}
               />
             </View>
           </View>
@@ -179,7 +173,7 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
           </Text>
           <FullButton
             style={{ marginTop: Spacing[4] }}
-            text="Start Scanning"
+            label="Start Scanning"
             onPress={navToScanner}
           />
         </View>
@@ -197,6 +191,28 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
           iconColor={Colors.red[600]}
           onPress={deleteInvoice}
         />
+      </ActionSheet>
+      <ActionSheet isOpen={isEmailOpen} onClose={closeEmail}>
+        <Text style={styles.modalTitleText}>Export Invoices</Text>
+        <Text style={styles.modalDescriptionText}>
+          Enter the email address you want to send the exported file to.
+        </Text>
+        <TextInput
+          value={email}
+          keyboardType="email-address"
+          onChangeText={setEmail}
+          style={{ marginTop: Spacing[4] }}
+          placeholder="Email address"
+        />
+        <View style={{ marginTop: Spacing[6] }}>
+          <FullButton label="Send" onPress={exportCSV} />
+          <TextButton
+            label="Cancel"
+            onPress={closeEmail}
+            style={{ marginTop: Spacing[2] }}
+          />
+        </View>
+        <KeyboardSpacer />
       </ActionSheet>
     </View>
   );
@@ -292,6 +308,16 @@ const styles = StyleSheet.create({
   totalText: {
     fontSize: FontSizes.lg.size,
     fontWeight: FontWeights.semibold,
+  },
+
+  modalTitleText: {
+    fontSize: FontSizes.xl.size,
+    lineHeight: FontSizes.xl.lineHeight,
+    fontWeight: FontWeights.semibold,
+  },
+  modalDescriptionText: {
+    marginTop: Spacing[2],
+    fontSize: FontSizes.base.size,
   },
 });
 
