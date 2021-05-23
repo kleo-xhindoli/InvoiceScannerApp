@@ -12,17 +12,21 @@ import Spacing from "../../constants/theme/Spacing";
 import Colors from "../../constants/theme/Colors";
 import FontWeights from "../../constants/theme/FontWeights";
 import FontSizes from "../../constants/theme/FontSizes";
+import { FeatherIcon } from "../../types/icons";
+import { Feather } from "@expo/vector-icons";
 
 interface FullButtonProps extends TouchableOpacityProps {
   bgColor?: string;
   label?: string;
   labelColor?: string;
-  icon?: React.ReactNode;
+  leftIcon?: FeatherIcon;
+  iconSize?: number;
   children?: React.ReactNode;
 }
 
 export default function FullButton({
-  icon,
+  leftIcon,
+  iconSize = 18,
   bgColor = Colors.brand[600],
   label,
   labelColor = Colors.white,
@@ -33,7 +37,14 @@ export default function FullButton({
   const styles = makeStyles(bgColor, labelColor);
   return (
     <TouchableOpacity style={[styles.button, style]} {...rest}>
-      {icon}
+      {leftIcon && (
+        <Feather
+          name={leftIcon}
+          size={iconSize}
+          color={labelColor}
+          style={{ marginRight: Spacing[2] }}
+        />
+      )}
       {label ? <Text style={styles.text}>{label}</Text> : children}
     </TouchableOpacity>
   );

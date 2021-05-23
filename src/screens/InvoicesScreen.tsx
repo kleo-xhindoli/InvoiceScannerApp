@@ -50,6 +50,7 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
   const invoices = useInvoices(invoiceListSelector);
   const totalAmount = useInvoices(totalInvoiceAmountSelector);
   const removeInvoice = useInvoices((state) => state.removeInvoice);
+  const clearInvoices = useInvoices((state) => state.clearInvoices);
 
   const navToScanner = () => {
     navigation.navigate("Scanner");
@@ -71,7 +72,7 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
           style: "cancel",
         },
         {
-          text: "Yes",
+          text: "Confirm",
           onPress: () => {
             removeInvoice(selectedInvoice.iic);
             onClose();
@@ -89,6 +90,26 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
       showToast({ text: "Invalid email", duration: 2000 });
     }
     closeEmail();
+  };
+
+  const clearALlInvoices = () => {
+    Alert.alert(
+      "Clear Invoices",
+      `Are you sure you want to delete all invoices. This action is irreversible.`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Confirm",
+          onPress: () => {
+            clearInvoices();
+          },
+          style: "destructive",
+        },
+      ]
+    );
   };
 
   const renderListItem = ({ item }: { item: Invoice }) => {
@@ -134,19 +155,12 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
               keyExtractor={(item) => item.iic}
             />
             {/* Spacer so no items show underneath the Total frame */}
-            <View style={{ height: 70 }} />
+            <View style={{ height: 100 }} />
 
             <View style={styles.exportButtonContainer}>
               <FullButton
                 style={styles.exportButton}
-                icon={
-                  <Feather
-                    name="download"
-                    color={Colors.white}
-                    size={18}
-                    style={{ marginRight: Spacing[2] }}
-                  />
-                }
+                leftIcon="download"
                 label="Export CSV"
                 onPress={openEmail}
               />
@@ -159,6 +173,12 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
                 ALL {totalAmount}
               </Text>
             </View>
+            <TextButton
+              label="Clear all invoices"
+              leftIcon="trash-2"
+              color={Colors.gray[600]}
+              onPress={clearALlInvoices}
+            />
           </View>
         </>
       ) : (
@@ -258,7 +278,7 @@ const styles = StyleSheet.create({
   exportButtonContainer: {
     width: "100%",
     position: "absolute",
-    bottom: 90,
+    bottom: 120,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -282,7 +302,7 @@ const styles = StyleSheet.create({
     width: "100%",
     position: "absolute",
     bottom: 0,
-    height: 70,
+    height: 100,
     backgroundColor: Colors.white,
     flexDirection: "column",
     paddingHorizontal: Spacing[4],
