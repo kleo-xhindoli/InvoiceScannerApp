@@ -1,4 +1,4 @@
-import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { StackScreenProps } from "@react-navigation/stack";
 import React, { useState } from "react";
 import {
