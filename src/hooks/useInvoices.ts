@@ -9,6 +9,7 @@ interface State {
   invoices: { [iic: string]: Invoice };
   addInvoice: (invoiceUrl: string) => void;
   clearInvoices: () => void;
+  removeInvoice: (iic: string) => void;
 }
 
 export const totalInvoicesSelector = (state: State) =>
@@ -48,6 +49,15 @@ const useInvoices = create<State>((set) => ({
         isFetching: false,
       }));
     }
+  },
+  removeInvoice(iic: string) {
+    set((state) => {
+      const newState = { ...state };
+      if (newState.invoices[iic]) delete newState.invoices[iic];
+      return {
+        ...newState,
+      };
+    });
   },
   clearInvoices() {
     set({ invoices: {}, isFetching: false });
