@@ -23,6 +23,7 @@ import { useDisclosure } from "../hooks/useDisclosure";
 import useInvoices, {
   Invoice,
   invoiceListSelector,
+  totalInvoiceAmountSelector,
 } from "../hooks/useInvoices";
 import useToast from "../hooks/useToast";
 import { RootStackParamList } from "../types/stack";
@@ -38,6 +39,7 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
 
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const invoices = useInvoices(invoiceListSelector);
+  const totalAmount = useInvoices(totalInvoiceAmountSelector);
   const removeInvoice = useInvoices((state) => state.removeInvoice);
 
   const navToScanner = () => {
@@ -130,28 +132,41 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
           <ActivityIndicator />
         </View>
       ) : invoices.length > 0 ? (
-        <View style={{ flex: 1 }}>
-          <FlatList
-            data={invoices}
-            renderItem={renderListItem}
-            keyExtractor={(item) => item.iic}
-          />
-          <View style={styles.exportButtonContainer}>
-            <FullButton
-              style={styles.exportButton}
-              icon={
-                <Feather
-                  name="download"
-                  color={Colors.white}
-                  size={18}
-                  style={{ marginRight: Spacing[2] }}
-                />
-              }
-              text="Export CSV"
-              onPress={exportCSV}
+        <>
+          <View style={{ flex: 1 }}>
+            <FlatList
+              data={invoices}
+              renderItem={renderListItem}
+              keyExtractor={(item) => item.iic}
             />
+            {/* Spacer so no items show underneath the Total frame */}
+            <View style={{height: 70}} /> 
+
+            <View style={styles.exportButtonContainer}>
+              <FullButton
+                style={styles.exportButton}
+                icon={
+                  <Feather
+                    name="download"
+                    color={Colors.white}
+                    size={18}
+                    style={{ marginRight: Spacing[2] }}
+                  />
+                }
+                text="Export CSV"
+                onPress={exportCSV}
+              />
+            </View>
           </View>
-        </View>
+          <View style={[styles.totalViewContainer]}>
+            <View style={styles.totalTextRow}>
+              <Text style={styles.totalText}>Total: </Text>
+              <Text style={[styles.totalText, { color: Colors.green[600] }]}>
+                ALL {totalAmount}
+              </Text>
+            </View>
+          </View>
+        </>
       ) : (
         <View style={styles.centeredContent}>
           <MaterialCommunityIcons
@@ -227,7 +242,7 @@ const styles = StyleSheet.create({
   exportButtonContainer: {
     width: "100%",
     position: "absolute",
-    bottom: 40,
+    bottom: 90,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -246,6 +261,37 @@ const styles = StyleSheet.create({
         shadowRadius: 25,
       },
     }),
+  },
+  totalViewContainer: {
+    width: "100%",
+    position: "absolute",
+    bottom: 0,
+    height: 70,
+    backgroundColor: Colors.white,
+    flexDirection: "column",
+    paddingHorizontal: Spacing[4],
+    paddingTop: Spacing[4],
+    ...Platform.select({
+      android: {
+        elevation: 2,
+        overflow: "hidden",
+      },
+      default: {
+        shadowColor: Colors.black,
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+      },
+    }),
+  },
+  totalTextRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  totalText: {
+    fontSize: FontSizes.lg.size,
+    fontWeight: FontWeights.semibold,
   },
 });
 

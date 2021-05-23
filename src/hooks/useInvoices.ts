@@ -18,6 +18,12 @@ export const totalInvoicesSelector = (state: State) =>
 export const invoiceListSelector = (state: State) =>
   Object.values(state.invoices);
 
+export const totalInvoiceAmountSelector = (state: State) =>
+  Object.values(state.invoices).reduce((tot, curr) => {
+    const amt = curr.invoiceData?.totalPrice || 0;
+    return tot + amt;
+  }, 0);
+
 const useInvoices = create<State>((set) => ({
   isFetching: false,
   invoices: {},
