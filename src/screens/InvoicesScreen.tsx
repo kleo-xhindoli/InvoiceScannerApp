@@ -130,7 +130,7 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
           <ActivityIndicator />
         </View>
       ) : invoices.length > 0 ? (
-        <SafeAreaView style={{ flex: 1 }}>
+        <View style={{ flex: 1 }}>
           <FlatList
             data={invoices}
             renderItem={renderListItem}
@@ -151,7 +151,7 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
               onPress={exportCSV}
             />
           </View>
-        </SafeAreaView>
+        </View>
       ) : (
         <View style={styles.centeredContent}>
           <MaterialCommunityIcons
@@ -190,7 +190,7 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
 const styles = StyleSheet.create({
   fullScreen: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.gray[100],
   },
   centeredContent: {
     flex: 1,
