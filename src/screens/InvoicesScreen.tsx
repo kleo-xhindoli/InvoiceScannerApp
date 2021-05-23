@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { StackScreenProps } from "@react-navigation/stack";
 import React, { useState } from "react";
 import {
@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Alert,
+  Platform,
 } from "react-native";
 import ActionSheet from "../components/ui/ActionSheet";
 import ActionSheetItem from "../components/ui/ActionSheetItem";
@@ -23,14 +24,17 @@ import useInvoices, {
   Invoice,
   invoiceListSelector,
 } from "../hooks/useInvoices";
+import useToast from "../hooks/useToast";
 import { RootStackParamList } from "../types/stack";
 import { formatDateTime } from "../utils/date";
+import { isValidEmail } from "../utils/string";
 
 type InvoicesScreenProps = StackScreenProps<RootStackParamList, "Invoices">;
 
 const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
   const isLoading = useInvoices((state) => state.isFetching);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { showToast } = useToast();
 
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const invoices = useInvoices(invoiceListSelector);
@@ -62,6 +66,30 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
             onClose();
           },
           style: "destructive",
+        },
+      ]
+    );
+  };
+
+  const exportCSV = () => {
+    // TODO: Refactor this. Prompt is not available on Android.
+    Alert.prompt(
+      "Export Invoices",
+      `Enter the email address you want to send the exported file to.`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Send",
+          onPress: (text) => {
+            if (text && isValidEmail(text)) {
+              showToast({ text: `Email sent to ${text}`, duration: 2000 });
+            } else {
+              showToast({ text: "Invalid email", duration: 2000 });
+            }
+          },
         },
       ]
     );
@@ -102,12 +130,27 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
           <ActivityIndicator />
         </View>
       ) : invoices.length > 0 ? (
-        <SafeAreaView>
+        <SafeAreaView style={{ flex: 1 }}>
           <FlatList
             data={invoices}
             renderItem={renderListItem}
             keyExtractor={(item) => item.iic}
           />
+          <View style={styles.exportButtonContainer}>
+            <FullButton
+              style={styles.exportButton}
+              icon={
+                <Feather
+                  name="download"
+                  color={Colors.white}
+                  size={18}
+                  style={{ marginRight: Spacing[2] }}
+                />
+              }
+              text="Export CSV"
+              onPress={exportCSV}
+            />
+          </View>
         </SafeAreaView>
       ) : (
         <View style={styles.centeredContent}>
@@ -180,6 +223,29 @@ const styles = StyleSheet.create({
     fontWeight: FontWeights.semibold,
     fontSize: FontSizes.base.size,
     color: Colors.green[600],
+  },
+  exportButtonContainer: {
+    width: "100%",
+    position: "absolute",
+    bottom: 40,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  exportButton: {
+    marginTop: Spacing[4],
+    ...Platform.select({
+      android: {
+        elevation: 10,
+        overflow: "hidden",
+      },
+      default: {
+        shadowColor: Colors.brand[600],
+        shadowOpacity: 0.3,
+        shadowOffset: { width: 0, height: 10 },
+        shadowRadius: 25,
+      },
+    }),
   },
 });
 
