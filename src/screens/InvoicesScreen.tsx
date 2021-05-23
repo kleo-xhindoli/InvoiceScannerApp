@@ -31,6 +31,7 @@ import useInvoices, {
 import useToast from "../hooks/useToast";
 import { RootStackParamList } from "../types/stack";
 import { formatDateTime } from "../utils/date";
+import { emailCSV } from "../utils/invoice";
 import { isValidEmail } from "../utils/string";
 
 type InvoicesScreenProps = StackScreenProps<RootStackParamList, "Invoices">;
@@ -45,6 +46,7 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
   } = useDisclosure();
   const { showToast } = useToast();
 
+  const [isSending, setIsSending] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [email, setEmail] = useState("");
   const invoices = useInvoices(invoiceListSelector);
@@ -83,13 +85,31 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
     );
   };
 
-  const exportCSV = () => {
-    if (email && isValidEmail(email)) {
-      showToast({ text: `Email sent to ${email}`, duration: 2000 });
-    } else {
+  const exportCSV = async () => {
+    if (!email || !isValidEmail(email)) {
       showToast({ text: "Invalid email", duration: 2000 });
+      closeEmail();
+      return;
     }
-    closeEmail();
+
+    setIsSending(true);
+    const invoicesWithData = invoices.filter((i) => Boolean(i.invoiceData));
+    try {
+      await emailCSV(
+        invoicesWithData.map((i) => i.invoiceData!),
+        email
+      );
+      showToast({ text: `Email sent to ${email}`, duration: 2000 });
+    } catch (e) {
+      console.error(e);
+      showToast({
+        text: `Failed to send email. Try again later`,
+        duration: 2000,
+      });
+    } finally {
+      setIsSending(false);
+      closeEmail();
+    }
   };
 
   const clearALlInvoices = () => {
