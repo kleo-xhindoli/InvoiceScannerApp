@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,11 +6,15 @@ import {
   ActivityIndicator,
   FlatList,
   SafeAreaView,
+  TouchableOpacity,
 } from "react-native";
+import ActionSheet from "../components/ui/ActionSheet";
+import ActionSheetItem from "../components/ui/ActionSheetItem";
 import Colors from "../constants/theme/Colors";
 import FontSizes from "../constants/theme/FontSizes";
 import FontWeights from "../constants/theme/FontWeights";
 import Spacing from "../constants/theme/Spacing";
+import { useDisclosure } from "../hooks/useDisclosure";
 import useInvoices, {
   Invoice,
   invoiceListSelector,
@@ -1800,14 +1804,24 @@ interface InvoicesScreenProps {}
 
 const InvoicesScreen: React.FC<InvoicesScreenProps> = () => {
   const isLoading = useInvoices((state) => state.isFetching);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   // const invoices = useInvoices(invoiceListSelector);
+
+  const selectInvoice = (invoice: Invoice) => {
+    setSelectedInvoice(invoice);
+    onOpen();
+  };
 
   const renderListItem = ({ item }: { item: Invoice }) => {
     const { invoiceData } = item;
     return (
-      <View style={styles.listItem}>
+      <TouchableOpacity
+        style={styles.listItem}
+        onLongPress={() => selectInvoice(item)}
+      >
         {!invoiceData ? (
-          <Text>No Data</Text>
+          <Text style={{ fontStyle: "italic" }}>No Data</Text>
         ) : (
           <>
             <View>
@@ -1823,7 +1837,7 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = () => {
             </View>
           </>
         )}
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -1842,6 +1856,20 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = () => {
           />
         )}
       </SafeAreaView>
+
+      <ActionSheet isOpen={isOpen} onClose={onClose}>
+        <ActionSheetItem
+          label="Invoice Details"
+          icon="file-text"
+          onPress={() => console.log("Details")}
+        />
+        <ActionSheetItem
+          label="Delete"
+          icon="trash-2"
+          iconColor={Colors.red[600]}
+          onPress={() => console.log("Delete")}
+        />
+      </ActionSheet>
     </View>
   );
 };
