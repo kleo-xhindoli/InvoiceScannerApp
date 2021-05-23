@@ -1,3 +1,5 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { StackScreenProps } from "@react-navigation/stack";
 import React, { useState } from "react";
 import {
   View,
@@ -11,6 +13,7 @@ import {
 } from "react-native";
 import ActionSheet from "../components/ui/ActionSheet";
 import ActionSheetItem from "../components/ui/ActionSheetItem";
+import FullButton from "../components/ui/FullButton";
 import Colors from "../constants/theme/Colors";
 import FontSizes from "../constants/theme/FontSizes";
 import FontWeights from "../constants/theme/FontWeights";
@@ -20,6 +23,7 @@ import useInvoices, {
   Invoice,
   invoiceListSelector,
 } from "../hooks/useInvoices";
+import { RootStackParamList } from "../types/stack";
 import { formatDateTime } from "../utils/date";
 
 // const invoices = [
@@ -1801,15 +1805,19 @@ import { formatDateTime } from "../utils/date";
 //   },
 // ];
 
-interface InvoicesScreenProps {}
+type InvoicesScreenProps = StackScreenProps<RootStackParamList, "Invoices">;
 
-const InvoicesScreen: React.FC<InvoicesScreenProps> = () => {
+const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
   const isLoading = useInvoices((state) => state.isFetching);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const invoices = useInvoices(invoiceListSelector);
   const removeInvoice = useInvoices((state) => state.removeInvoice);
+
+  const navToScanner = () => {
+    navigation.navigate("Scanner");
+  };
 
   const selectInvoice = (invoice: Invoice) => {
     setSelectedInvoice(invoice);
@@ -1868,19 +1876,35 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = () => {
 
   return (
     <View style={styles.fullScreen}>
-      <SafeAreaView>
-        {isLoading ? (
-          <View style={styles.indicatorContainer}>
-            <ActivityIndicator />
-          </View>
-        ) : (
+      {isLoading ? (
+        <View style={styles.centeredContent}>
+          <ActivityIndicator />
+        </View>
+      ) : invoices.length > 0 ? (
+        <SafeAreaView>
           <FlatList
             data={invoices}
             renderItem={renderListItem}
             keyExtractor={(item) => item.iic}
           />
-        )}
-      </SafeAreaView>
+        </SafeAreaView>
+      ) : (
+        <View style={styles.centeredContent}>
+          <MaterialCommunityIcons
+            name="qrcode-scan"
+            size={50}
+            style={{ color: Colors.gray[400] }}
+          />
+          <Text style={[styles.emptyStateText, { marginTop: Spacing[4] }]}>
+            No invoices scanned
+          </Text>
+          <FullButton
+            style={{ marginTop: Spacing[4] }}
+            text="Start Scanning"
+            onPress={navToScanner}
+          />
+        </View>
+      )}
 
       <ActionSheet isOpen={isOpen} onClose={onClose}>
         <ActionSheetItem
@@ -1902,12 +1926,17 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = () => {
 const styles = StyleSheet.create({
   fullScreen: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: Colors.white,
   },
-  indicatorContainer: {
+  centeredContent: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  emptyStateText: {
+    fontSize: FontSizes.lg.size,
+    fontWeight: FontWeights.medium,
+    color: Colors.gray[600],
   },
   listItem: {
     paddingHorizontal: Spacing[4],
