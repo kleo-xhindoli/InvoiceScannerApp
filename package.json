@@ -5,6 +5,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
+    "cache-clean": "expo r -c",
     "eject": "expo eject"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-41.0.0.tar.gz",
+    "react-native-dotenv": "^2.5.5",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-keyboard-spacer": "^0.4.1",
     "react-native-modal": "^11.10.0",
