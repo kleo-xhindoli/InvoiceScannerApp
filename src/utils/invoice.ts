@@ -3,6 +3,7 @@ import queryString from "query-string";
 import { parseAsync } from "json2csv";
 import { InvoiceData } from "../types/invoice";
 import { formatDateTime } from "./date";
+import Config from "../config/environment";
 
 export interface InvoiceQueryParams {
   bu: string;
@@ -115,6 +116,10 @@ export async function getInvoicesCSV(invoices: InvoiceData[]) {
 
 export async function emailCSV(invoiceData: InvoiceData[], email: string) {
   const csv = await getInvoicesCSV(invoiceData);
-  // TODO: Implement email
-  console.log(csv);
+
+  return axios.post(`${Config.apiUrl}/email`, {
+    filename: `InvoiceExport_${Date.now()}.csv`,
+    csv,
+    email,
+  });
 }

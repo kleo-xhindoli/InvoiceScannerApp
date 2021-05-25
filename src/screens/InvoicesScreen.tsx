@@ -103,7 +103,7 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
     } catch (e) {
       console.error(e);
       showToast({
-        text: `Failed to send email. Try again later`,
+        text: e.message || "Failed to send email. Try again later",
         duration: 2000,
       });
     } finally {

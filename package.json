@@ -6,7 +6,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "cache-clean": "expo r -c",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "publish-expo": "APP_ENV=prod && expo publish"
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.5",
