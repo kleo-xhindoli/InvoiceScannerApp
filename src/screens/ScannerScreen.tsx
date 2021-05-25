@@ -13,6 +13,7 @@ import * as Haptics from "expo-haptics";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../types/stack";
 import { useIsFocused } from "@react-navigation/core";
+import Config from "../config/environment";
 
 type ScannerScreenProps = StackScreenProps<RootStackParamList, "Scanner">;
 
