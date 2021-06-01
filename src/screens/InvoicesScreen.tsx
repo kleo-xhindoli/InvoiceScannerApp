@@ -102,7 +102,8 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
     try {
       await emailCSV(
         invoicesWithData.map((i) => i.invoiceData!),
-        email
+        email,
+        t
       );
       showToast({ text: t("invoices.emailSent", { email }), duration: 2000 });
     } catch (e) {
