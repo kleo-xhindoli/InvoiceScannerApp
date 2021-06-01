@@ -1,0 +1,50 @@
+{
+  "common": {
+    "english": "English",
+    "albanian": "Albanian",
+    "loadMore": "Load More",
+    "loading": "Loading",
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "remove": "Remove",
+    "invoice": "Invoice",
+    "invoices": "Invoices",
+    "scan": "Scan",
+    "search": "Search",
+    "send": "Send",
+    "emailAddress": "Email address",
+    "formattedIntlDate": "{{date, intlDate}}",
+    "formattedIntlTime": "{{time, intlTime}}"
+  },
+  "scanner": {
+    "startScanning": "Start scanning invoices",
+    "invalidInvoice": "Invalid invoice",
+    "alreadyScanned": "Already Scanned",
+    "requestingPermission": "Requesting for camera permission",
+    "noPermission": "No access to camera"
+  },
+  "invoices": {
+    "deleteInvoice": "Delete Invoice",
+    "deleteConfirmMessage": "Are you sure you want to delete invoice #{{invoiceNumber}}?",
+    "invalidEmail": "Invalid Email",
+    "emailSent": "Email sent to {{email}}",
+    "failedToSend": "Failed to send email. Try again later",
+    "clearInvoices": "Clear Invoices",
+    "clearInvoicesConfirmMessage": "Are you sure you want to delete all invoices. This action is irreversible.",
+    "noData": "No data",
+    "exportCsv": "Export CSV",
+    "total": "Total: ",
+    "clearAllInvoices": "Clear all invoices",
+    "noInvoicesScanned": "No invoices scanned",
+    "startScanning": "Start Scanning",
+    "invoiceDetails": "Invoice Details",
+    "exportInvoices": "Export Invoices",
+    "sendEmailDescription": "Enter the email address you want to send the exported file to."
+  }
+}

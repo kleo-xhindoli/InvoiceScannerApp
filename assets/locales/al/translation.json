@@ -1,0 +1,50 @@
+{
+  "common": {
+    "english": "Anglisht",
+    "albanian": "Shqip",
+    "loadMore": "Ngarko më shumë",
+    "loading": "Duke ngarkuar",
+    "ok": "OK",
+    "yes": "Po",
+    "no": "Jo",
+    "confirm": "Konfirmo",
+    "cancel": "Anullo",
+    "save": "Ruaj",
+    "edit": "Modifiko",
+    "delete": "Fshi",
+    "remove": "Fshi",
+    "invoice": "Faturë",
+    "invoices": "Fatura",
+    "scan": "Skano",
+    "search": "Kërko",
+    "send": "Dërgo",
+    "emailAddress": "Adresa e email",
+    "formattedIntlDate": "{{date, intlDate}}",
+    "formattedIntlTime": "{{time, intlTime}}"
+  },
+  "scanner": {
+    "startScanning": "Fillo skano fatura",
+    "invalidInvoice": "Faturë e pavlefshme",
+    "alreadyScanned": "Skanuar më parë",
+    "requestingPermission": "Duke kërkuar të drejta për kamerën",
+    "noPermission": "Nuk ka të drejta për kamerën"
+  },
+  "invoices": {
+    "deleteInvoice": "Fshi Faturën",
+    "deleteConfirmMessage": "A jeni të sigurt që doni të fshini faturën me numër #{{invoiceNumber}}?",
+    "invalidEmail": "Email i pavlefshëm",
+    "emailSent": "Email u dërgua te {{email}}",
+    "failedToSend": "Email nuk mund të dërgohet në këtë moment. Provoni më vonë.",
+    "clearInvoices": "Pastro Faturat",
+    "clearInvoicesConfirmMessage": "A jeni të sigurt që doni të fshini të gjitha faturat? Ky veprim nuk mund të anullohet.",
+    "noData": "Nuk ka të dhena",
+    "exportCsv": "Eksporto Excel",
+    "total": "Totali: ",
+    "clearAllInvoices": "Pastro të gjitha faturat",
+    "noInvoicesScanned": "Asnjë faturë e skanuar",
+    "startScanning": "Fillo Skano",
+    "invoiceDetails": "Të dhënat e faturës",
+    "exportInvoices": "Eksporto Faturat",
+    "sendEmailDescription": "Vendosni adresën e email-it ku dëshironi të dergohet dokumenti i eksportuar."
+  }
+}

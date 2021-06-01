@@ -14,10 +14,13 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../types/stack";
 import { useIsFocused } from "@react-navigation/core";
 import Config from "../config/environment";
+import { useTranslation } from "react-i18next";
 
 type ScannerScreenProps = StackScreenProps<RootStackParamList, "Scanner">;
 
 const ScannerScreen: React.FC<ScannerScreenProps> = ({ navigation, route }) => {
+  const { t } = useTranslation();
+
   const [hasPermission, setHasPermission] = useState(false);
   const [isScanningEnabled, disableScanner] = useBlockForSeconds(3);
 
@@ -38,7 +41,7 @@ const ScannerScreen: React.FC<ScannerScreenProps> = ({ navigation, route }) => {
   }, []);
 
   useEffect(() => {
-    showToast({ text: "Start scanning invoices", duration: 3000 });
+    showToast({ text: t("scanner.startScanning"), duration: 3000 });
   }, []);
 
   const handleBarCodeScanned: BarCodeScannedCallback = ({ type, data }) => {
@@ -49,7 +52,7 @@ const ScannerScreen: React.FC<ScannerScreenProps> = ({ navigation, route }) => {
     }
 
     if (!isValidInvoiceUrl(data)) {
-      showToast({ text: "Invalid invoice", duration: 2000 });
+      showToast({ text: t("scanner.invalidInvoice"), duration: 2000 });
       return disableScanner();
     }
 
@@ -57,16 +60,16 @@ const ScannerScreen: React.FC<ScannerScreenProps> = ({ navigation, route }) => {
       addInvoice(data);
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     } else {
-      showToast({ text: "Already Scanned", duration: 1000 });
+      showToast({ text: t("scanner.alreadyScanned"), duration: 1000 });
     }
     disableScanner();
   };
 
   if (hasPermission === null) {
-    return <Text>Requesting for camera permission</Text>;
+    return <Text>{t("scanner.requestingPermission")}</Text>;
   }
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+    return <Text>{t("scanner.noPermission")}</Text>;
   }
 
   return (

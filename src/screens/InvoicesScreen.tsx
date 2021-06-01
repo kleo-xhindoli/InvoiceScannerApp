@@ -12,6 +12,7 @@ import {
   Platform,
 } from "react-native";
 import KeyboardSpacer from "react-native-keyboard-spacer";
+import { useTranslation } from "react-i18next";
 
 import ActionSheet from "../components/ui/ActionSheet";
 import ActionSheetItem from "../components/ui/ActionSheetItem";
@@ -37,6 +38,8 @@ import { isValidEmail } from "../utils/string";
 type InvoicesScreenProps = StackScreenProps<RootStackParamList, "Invoices">;
 
 const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
+  const { t } = useTranslation();
+
   const isLoading = useInvoices((state) => state.isFetching);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -66,15 +69,17 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
   const deleteInvoice = () => {
     if (!selectedInvoice) return;
     Alert.alert(
-      "Delete Invoice",
-      `Are you sure you want to delete invoice #${selectedInvoice.invoiceData?.invoiceOrderNumber}`,
+      t("invoices.deleteInvoice"),
+      t("invoices.deleteConfirmMessage", {
+        invoiceNumber: selectedInvoice.invoiceData?.invoiceOrderNumber,
+      }),
       [
         {
-          text: "Cancel",
+          text: t("common.cancel"),
           style: "cancel",
         },
         {
-          text: "Confirm",
+          text: t("common.confirm"),
           onPress: () => {
             removeInvoice(selectedInvoice.iic);
             onClose();
@@ -87,7 +92,7 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
 
   const exportCSV = async () => {
     if (!email || !isValidEmail(email)) {
-      showToast({ text: "Invalid email", duration: 2000 });
+      showToast({ text: t("invoices.invalidEmail"), duration: 2000 });
       closeEmail();
       return;
     }
@@ -99,11 +104,11 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
         invoicesWithData.map((i) => i.invoiceData!),
         email
       );
-      showToast({ text: `Email sent to ${email}`, duration: 2000 });
+      showToast({ text: t("invoices.emailSent", { email }), duration: 2000 });
     } catch (e) {
       console.error(e);
       showToast({
-        text: "Failed to send email. Try again later",
+        text: t("invoices.failedToSend"),
         duration: 4000,
       });
     } finally {
@@ -114,15 +119,15 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
 
   const clearALlInvoices = () => {
     Alert.alert(
-      "Clear Invoices",
-      `Are you sure you want to delete all invoices. This action is irreversible.`,
+      t("invoices.clearInvoices"),
+      t("invoices.clearInvoicesConfirmMessage"),
       [
         {
-          text: "Cancel",
+          text: t("common.cancel"),
           style: "cancel",
         },
         {
-          text: "Confirm",
+          text: t("common.confirm"),
           onPress: () => {
             clearInvoices();
           },
@@ -140,7 +145,7 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
         onLongPress={() => selectInvoice(item)}
       >
         {!invoiceData ? (
-          <Text style={{ fontStyle: "italic" }}>No Data</Text>
+          <Text style={{ fontStyle: "italic" }}>{t("invoices.noData")}</Text>
         ) : (
           <>
             <View>
@@ -181,20 +186,20 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
               <FullButton
                 style={styles.exportButton}
                 leftIcon="download"
-                label="Export CSV"
+                label={t("invoices.exportCsv")}
                 onPress={openEmail}
               />
             </View>
           </View>
           <View style={[styles.totalViewContainer]}>
             <View style={styles.totalTextRow}>
-              <Text style={styles.totalText}>Total: </Text>
+              <Text style={styles.totalText}>{t("invoices.total")}</Text>
               <Text style={[styles.totalText, { color: Colors.green[600] }]}>
                 ALL {totalAmount}
               </Text>
             </View>
             <TextButton
-              label="Clear all invoices"
+              label={t("invoices.clearAllInvoices")}
               leftIcon="trash-2"
               color={Colors.gray[600]}
               onPress={clearALlInvoices}
@@ -209,11 +214,11 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
             style={{ color: Colors.gray[400] }}
           />
           <Text style={[styles.emptyStateText, { marginTop: Spacing[4] }]}>
-            No invoices scanned
+            {t("invoices.noInvoicesScanned")}
           </Text>
           <FullButton
             style={{ marginTop: Spacing[4] }}
-            label="Start Scanning"
+            label={t("invoices.startScanning")}
             onPress={navToScanner}
           />
         </View>
@@ -221,33 +226,39 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
 
       <ActionSheet isOpen={isOpen} onClose={onClose}>
         <ActionSheetItem
-          label="Invoice Details"
+          label={t("invoices.invoiceDetails")}
           icon="file-text"
           onPress={() => console.log("Details")}
         />
         <ActionSheetItem
-          label="Delete"
+          label={t("common.delete")}
           icon="trash-2"
           iconColor={Colors.red[600]}
           onPress={deleteInvoice}
         />
       </ActionSheet>
       <ActionSheet isOpen={isEmailOpen} onClose={closeEmail}>
-        <Text style={styles.modalTitleText}>Export Invoices</Text>
+        <Text style={styles.modalTitleText}>
+          {t("invoices.exportInvoices")}
+        </Text>
         <Text style={styles.modalDescriptionText}>
-          Enter the email address you want to send the exported file to.
+          {t("invoices.sendEmailDescription")}
         </Text>
         <TextInput
           value={email}
           keyboardType="email-address"
           onChangeText={setEmail}
           style={{ marginTop: Spacing[4] }}
-          placeholder="Email address"
+          placeholder={t("common.emailAddress")}
         />
         <View style={{ marginTop: Spacing[6] }}>
-          <FullButton label="Send" onPress={exportCSV} isLoading={isSending} />
+          <FullButton
+            label={t("common.send")}
+            onPress={exportCSV}
+            isLoading={isSending}
+          />
           <TextButton
-            label="Cancel"
+            label={t("common.cancel")}
             onPress={closeEmail}
             style={{ marginTop: Spacing[2] }}
           />
