@@ -6,6 +6,7 @@ import {
   ViewStyle,
   Text,
   TouchableOpacityProps,
+  ActivityIndicator,
 } from "react-native";
 import Radii from "../../constants/theme/Radii";
 import Spacing from "../../constants/theme/Spacing";
@@ -21,6 +22,7 @@ interface FullButtonProps extends TouchableOpacityProps {
   labelColor?: string;
   leftIcon?: FeatherIcon;
   iconSize?: number;
+  isLoading?: boolean;
   children?: React.ReactNode;
 }
 
@@ -30,21 +32,37 @@ export default function FullButton({
   bgColor = Colors.brand[600],
   label,
   labelColor = Colors.white,
+  isLoading,
   style,
+  disabled,
   children,
   ...rest
 }: FullButtonProps) {
   const styles = makeStyles(bgColor, labelColor);
+  const isDisabled = disabled || isLoading;
   return (
-    <TouchableOpacity style={[styles.button, style]} {...rest}>
-      {leftIcon && (
-        <Feather
-          name={leftIcon}
-          size={iconSize}
-          color={labelColor}
+    <TouchableOpacity
+      style={[styles.button, isDisabled && styles.disabled, style]}
+      disabled={isDisabled}
+      {...rest}
+    >
+      {isLoading ? (
+        <ActivityIndicator
+          size="small"
+          color={Colors.white}
           style={{ marginRight: Spacing[2] }}
         />
+      ) : (
+        leftIcon && (
+          <Feather
+            name={leftIcon}
+            size={iconSize}
+            color={labelColor}
+            style={{ marginRight: Spacing[2] }}
+          />
+        )
       )}
+
       {label ? <Text style={styles.text}>{label}</Text> : children}
     </TouchableOpacity>
   );
@@ -63,6 +81,9 @@ const makeStyles = (bgCol: string, txtCol: string) =>
       // borderWidth: 1,
       // borderColor: Colors.gray[200],
       textAlign: "center",
+    },
+    disabled: {
+      opacity: 0.7,
     },
     text: {
       color: txtCol,

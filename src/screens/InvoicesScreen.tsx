@@ -245,7 +245,7 @@ const InvoicesScreen: React.FC<InvoicesScreenProps> = ({ navigation }) => {
           placeholder="Email address"
         />
         <View style={{ marginTop: Spacing[6] }}>
-          <FullButton label="Send" onPress={exportCSV} />
+          <FullButton label="Send" onPress={exportCSV} isLoading={isSending} />
           <TextButton
             label="Cancel"
             onPress={closeEmail}
