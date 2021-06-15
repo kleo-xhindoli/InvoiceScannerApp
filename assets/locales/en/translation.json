@@ -51,7 +51,9 @@
   "settings": {
     "general": "General",
     "about": "About us",
-    "appVersion": "App Version"
+    "appInfo": "App info",
+    "appVersion": "App version: {{version}}",
+    "build": "Build number: {{build}}"
   },
   "invoiceFields": {
     "iic": "IIC",

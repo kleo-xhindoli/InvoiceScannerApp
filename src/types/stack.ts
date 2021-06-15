@@ -3,4 +3,5 @@ export type RootStackParamList = {
   Invoices: undefined;
   Settings: undefined;
   Language: undefined;
+  AppInfo: undefined;
 };

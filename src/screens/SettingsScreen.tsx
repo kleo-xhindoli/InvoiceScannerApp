@@ -37,6 +37,10 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
     navigation.navigate("Language");
   };
 
+  const navToAppInfo = () => {
+    navigation.navigate("AppInfo");
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -55,7 +59,8 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
         <ListItem
           leftIcon="smartphone"
           rightIcon="chevron-right"
-          text={t("settings.appVersion")}
+          text={t("settings.appInfo")}
+          onPress={navToAppInfo}
         />
       </ScrollView>
     </View>

@@ -8,6 +8,7 @@ import SettingsButton from "../components/SettingsButton";
 import SettingsScreen from "../screens/SettingsScreen";
 import LanguagesScreen from "../screens/LanguageScreen";
 import useLanguageState from "../hooks/useLanguageState";
+import AppInfoScreen from "../screens/AppInfoScreen";
 
 const Stack = createStackNavigator();
 
@@ -35,6 +36,7 @@ const RootNavigator: React.FC<RootNavigatorProps> = () => {
         />
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="Language" component={LanguagesScreen} />
+        <Stack.Screen name="AppInfo" component={AppInfoScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

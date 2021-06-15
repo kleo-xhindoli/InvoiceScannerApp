@@ -51,7 +51,9 @@
   "settings": {
     "general": "Të përgjithshme",
     "about": "Rreth nesh",
-    "appVersion": "Versioni i app"
+    "appInfo": "App info",
+    "appVersion": "Versioni i app: {{version}}",
+    "build": "Build: {{build}}"
   },
   "invoiceFields": {
     "iic": "NSLF",
