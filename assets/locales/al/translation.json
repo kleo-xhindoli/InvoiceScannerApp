@@ -1,5 +1,6 @@
 {
   "common": {
+    "language": "Gjuha",
     "english": "Anglisht",
     "albanian": "Shqip",
     "loadMore": "Ngarko më shumë",
@@ -46,6 +47,11 @@
     "invoiceDetails": "Të dhënat e faturës",
     "exportInvoices": "Eksporto Faturat",
     "sendEmailDescription": "Vendosni adresën e email-it ku dëshironi të dergohet dokumenti i eksportuar."
+  },
+  "settings": {
+    "general": "Të përgjithshme",
+    "about": "Rreth nesh",
+    "appVersion": "Versioni i app"
   },
   "invoiceFields": {
     "iic": "NSLF",

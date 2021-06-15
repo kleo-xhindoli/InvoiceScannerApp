@@ -1,5 +1,6 @@
 {
   "common": {
+    "language": "Language",
     "english": "English",
     "albanian": "Albanian",
     "loadMore": "Load More",
@@ -46,6 +47,11 @@
     "invoiceDetails": "Invoice Details",
     "exportInvoices": "Export Invoices",
     "sendEmailDescription": "Enter the email address you want to send the exported file to."
+  },
+  "settings": {
+    "general": "General",
+    "about": "About us",
+    "appVersion": "App Version"
   },
   "invoiceFields": {
     "iic": "IIC",
