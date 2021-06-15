@@ -1,5 +1,5 @@
 import React from "react";
-import { NativeModules, Platform, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import ScannerScreen from "../screens/ScannerScreen";
@@ -7,8 +7,6 @@ import InvoicesScreen from "../screens/InvoicesScreen";
 import SettingsButton from "../components/SettingsButton";
 import SettingsScreen from "../screens/SettingsScreen";
 import LanguagesScreen from "../screens/LanguageScreen";
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import useLanguageState from "../hooks/useLanguageState";
 
 const Stack = createStackNavigator();
