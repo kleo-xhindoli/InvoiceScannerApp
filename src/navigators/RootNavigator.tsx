@@ -16,7 +16,7 @@ const Stack = createStackNavigator();
 interface RootNavigatorProps {}
 
 const RootNavigator: React.FC<RootNavigatorProps> = () => {
-  const [_, __, loaded] = useLanguageState(); // init language from app locale
+  const [, , loaded] = useLanguageState(); // init language from app locale
 
   if (!loaded) {
     return null;
