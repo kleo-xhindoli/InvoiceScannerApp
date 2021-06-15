@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  ScrollView,
-  Platform,
-  NativeModules,
-} from "react-native";
+import { Text, View, StyleSheet, ScrollView } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../types/stack";
 
@@ -22,16 +15,6 @@ type SettingsScreenProps = StackScreenProps<RootStackParamList, "Settings">;
 
 const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
   const { t } = useTranslation();
-
-  useEffect(() => {
-    const deviceLanguage =
-      Platform.OS === "ios"
-        ? NativeModules.SettingsManager.settings.AppleLocale ||
-          NativeModules.SettingsManager.settings.AppleLanguages[0]
-        : NativeModules.I18nManager.localeIdentifier;
-
-    console.log(deviceLanguage);
-  }, []);
 
   const navToLanguage = () => {
     navigation.navigate("Language");
