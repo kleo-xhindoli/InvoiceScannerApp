@@ -9,7 +9,6 @@ import FontSizes from "../constants/theme/FontSizes";
 import FontWeights from "../constants/theme/FontWeights";
 import Spacing from "../constants/theme/Spacing";
 import Colors from "../constants/theme/Colors";
-import { useEffect } from "react";
 
 type SettingsScreenProps = StackScreenProps<RootStackParamList, "Settings">;
 
